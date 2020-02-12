@@ -32,4 +32,4 @@
 *.app
 
 # Result files from tests
-resuts/*
+./resuts/*
