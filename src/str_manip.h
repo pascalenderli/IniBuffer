@@ -5,10 +5,13 @@
  * @brief Collection of string manipulation functions.
  */
 
+#ifndef STR_MANIP_H_
+#define STR_MANIP_H_
+
 #include<algorithm>
-#include <stdio.h>
+#include<stdio.h>
 #include<string>
-#include <time.h>
+#include<time.h>
 
 /// Trims white spaces to the left of a string.
 static void LTrim(std::string& s) noexcept
@@ -33,7 +36,7 @@ static void TrimWhitespace(std::string& s) noexcept
     RTrim(s);
 }
 
-/// Cuts away the comments on the right end of a line delimited with # or ;
+/// Cuts away the comments on the right end of a line delimited with a '#' or a ';'
 static void TrimComment(std::string& s) noexcept
 {
     size_t pos = s.find_first_of(";#");
@@ -48,3 +51,5 @@ static bool ContainsWhiteSpace(const std::string& str) noexcept
 {
     return str.find(" ") != std::string::npos;
 }
+
+#endif

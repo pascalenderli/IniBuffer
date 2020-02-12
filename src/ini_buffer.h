@@ -1,9 +1,12 @@
 /**
- * @file ini_file.h
+ * @file ini_buffer.h
  * @author Pascal Enderli
  * @date 2020.01.19
- * @brief Configuration file parser and writer.
+ * @brief Configuration file parser, writer and manipulater.
  */
+
+#ifndef INI_BUFFER_H_
+#define INI_BUFFER_H_
 
 #include<fstream>
 #include<iostream>
@@ -14,22 +17,24 @@
 //===================================================================================
 // Helpers
 //-----------------------------------------------------------------------------------
-// Logger
+// Logger This logger is only for demonstration purposes.
 
-unsigned int THRESH = 0;
-#define LOG(level, message) if(level>THRESH)do{std::cout<<message<<"\n";}while(0)
+const bool ini_buffer_logger_on = false;
+
+/// Loggs a message in the format [Line: <line_nr>][Msg: <message>]. Logger is turned off by default.
+#define LOG(message) if(ini_buffer_logger_on)do{std::cout<<"[Line: "<<__LINE__<<"][Msg: "<<message<<"]\n";}while(0)
 
 //-----------------------------------------------------------------------------------
-// Exception for IniFile class errors.
+// Exception for IniBuffer class errors.
 
 /// Macro for placing Exceptions of type IniException.
 #define INI_EXCEPTION(message) IniException(__LINE__, message)
 
-/** Exception type thrown by this IniFile class.
+/** Exception type thrown by the IniBuffer class.
 *
 * @details
 * The Error message IniException.what() returns a message in the following format:
-* @n [IniFileException][File: <filename>][Line: <line_nr>][What: <message>]
+* @n [IniBufferException][File: <filename>][Line: <line_nr>][What: <message>]
 */
 class IniException: public std::exception
 {
@@ -43,28 +48,30 @@ class IniException: public std::exception
 };
 
 //===================================================================================
-// IniFile class declaration
+// IniBuffer class declaration
 
 /** Represents the data structure of a classical ini file.
 *   @n The class supports reading and writing complete files as well as access and modifying the data members in a very easy way.
 *   @n Accessed data is automatically type casted. Supported are ints, floats, strings and bools.
-*   @n Errors are reported using IniExceptions and a meaningful error message is provided.
+*   @n Errors are reported using IniExceptions. A meaningful error message is provided.
+*   @n You can find more info in the read me.
 */
-class IniFile
+class IniBuffer
 {
     private:
+
     /// Forward declaration for internal data structure section.
     class Section;
 
-    /// Data type for the names of the section.
+    /// Data type alias for the names of the section.
     using section_name_t = std::string;
 
-    /// Data type for the section_name / section_data map.
+    /// Data type alias for the [section_name | section_data] map.
     using SectionMap_t = std::map<section_name_t, Section>;
 
     public:
 
-    /// List of supported Data types for internal communication.
+    /// List of supported data types for internal communication.
     enum DataType
     {
         STRING = 0,
@@ -75,7 +82,7 @@ class IniFile
     };
 
     //===================================================================================
-    // Begin of public IniFile Interface
+    // Begin of public IniBuffer Interface
 
     /** Loads a specified ini file and parses it into the RAM.
     *
@@ -83,15 +90,16 @@ class IniFile
     */
     void LoadFile(const std::string& fullfilename);
 
-    /** Writes the internal state into the specified file.
+    /** Writes the internal buffer state into the specified file.
     *   @details
-    *   the specified path (not the file) must exist.
+    *   @n The specified path (not the file) must exist.
+    *   @n If an error occurres during parsing or opening the file, an IniException is thrown.
     *
     *   @param fullfilename The path and filename pointing to the configuration file.
     */
     void WriteFile(const std::string& fullfilename) const;
 
-    /// Clears the whole state of the IniFile object.
+    /// Clears the whole state of the IniBuffer object.
     void Clear() noexcept;
 
     /** Receive a requested value from the buffer.
@@ -112,6 +120,9 @@ class IniFile
 
     /** Inserts a certain value into the ini file buffer.
     *
+    *   @details
+    *   If an error occurred during the operation an IniException is thrown.
+    *
     *   @param_t ValueT The type of the inserted data member. Supported are {int, float, std::string, bool}
     *
     *   @param section_name Name of the section where the value is stored in the ini file.
@@ -121,7 +132,7 @@ class IniFile
     template<typename ValueT>
     void AddValue(const std::string& section_name, const std::string& key_name, const ValueT& value);
 
-    // End of public iniFile interface
+    // End of public IniBuffer interface
     //===================================================================================
 
     private:
@@ -130,15 +141,18 @@ class IniFile
     {
         public:
 
-        /// Constructs a IniFile section.
+        /// Constructs a section which is a nested data structure of the IniBuffer.
         Section() noexcept;
 
-        /// Constructs a named IniFile section.
+        /// Constructs a named IniBuffer section.
         Section(const std::string& section_name) noexcept;
 
         ~Section() noexcept;
 
         /** Get the value from a property (key value pair) in the section.
+        *
+        *   @details
+        *   If an error occurred during the operation an IniException is thrown.
         *
         *   @param_t ValueT Data type of the requested value.
         *   @param key_name Key of he requested value.
@@ -146,16 +160,16 @@ class IniFile
         template<typename ValueT>
         ValueT GetValue(const std::string& key_name) const;
 
-        /// REturns the name of this section.
+        /// Returns the name of this section.
         const std::string& GetName() const noexcept;
 
-        /** Adds a new property (key/value pair) to the section.
+        /** Adds a new property [key | value pair] to the section.
         *
         *   @details
         *   A new property is added or an existing one updated.
         *
         *   @param key Name of the key where the new value should be stored.
-        *   @param value value which belongs to the key as string. (type is detected at insertion.)
+        *   @param value The value which belongs to the key as string. (type is detected at insertion.)
         */
         void AddProperty(const std::string& key, const std::string& value) noexcept;
 
@@ -164,7 +178,7 @@ class IniFile
 
         private:
 
-        /// Internal data structure of a single value, which is stored as a string with an auto detected data type.
+        /// Internal data structure of a single value, which is stored as a string and an auto detected data type.
         class StringifiedValue
         {
             public:
@@ -177,7 +191,11 @@ class IniFile
 
             ~StringifiedValue() noexcept;
 
-            /// Get this value casted in the specified type ValueT.
+            /** Get this value casted in the specified type ValueT.
+            *
+            * @details
+            * If the function fails, an IniException is thrown.
+            */
             template<typename ValueT>
             ValueT GetValue() const;
 
@@ -186,25 +204,25 @@ class IniFile
 
             private:
 
-            /** Underlaying Function which casts the stored strings of the values to the requested data type.
+            /** Underlaying function which casts the stored strings of the values to the requested data type.
             *
             *   @details
-            *   If the cast is not successful an IniFileException is thrown.
+            *   If the cast is not successful an IniBufferException is thrown.
             */
             template<typename ValueT>
             ValueT CastValue() const;
 
-            /// The data type of this stringified value.
+            /// The data type specification of this stringified value.
             DataType type_;
 
-            /// the stored value.
+            /// The stored value.
             std::string value_;
         };
 
-        /// Data type for keys.
+        /// Data type alias for keys.
         using KeyName_t = std::string;
 
-        /// Data type for the map of properties (Key / Value pairs).
+        /// Data type alias for the map of properties [Key | Value pairs].
         using PropertyMap_t = std::map<KeyName_t,  StringifiedValue>;
 
         /// Name of this section.
@@ -214,41 +232,41 @@ class IniFile
         PropertyMap_t properties_;
     };
 
-    /** Inserting a new section to the IniFile Buffer.
+    /** Inserting a new section to the IniBuffer.
     *
     *   @details
     *   If already a section with the same name is present in the buffer, the old section will be overwritten.
     */
     void AddSection(const Section& section) noexcept;
 
-    /// Interprets the  lines of an ini configuration file and stores its content in the buffer.
+    /// Interprets all lines of an ini configuration file and stores its content in the buffer.
     void ParseFile(const std::string& fullfilename);
 
-    /// Adds an empty section (without any properties) to the IniFile buffer.
+    /// Adds an empty section (without any properties) to the IniBuffer.
     void AddEmptySection(const std::string& section_name) noexcept;
 
     /** Converts any supported type into a std::string.
     *
     *   @details
-    *   Supported Types are: int, bool, float, std::string;
+    *   This function throws an IniException if it fails.
+    *   @n Supported Types are: {int, bool, float, std::string;}
     */
     template<typename ValueT>
     std::string Stringify(const ValueT& value) const;
 
-    ///
+    /// A Map of sections with their names [section_name | section_object]
     SectionMap_t sections_;
 };
 
-
-/// Internal functions that are used by the IniFile Class.
+/// Namespace for internal functions which are used by the IniBuffer Class.
 namespace internal
 {
-    /** Figures out the data type of the string str.
+    /** Finds the data type of a string.
     *
     *   @details
-    *   Used internally by the IniFile class.
+    *   Used internally by the IniBuffer class.
     */
-    IniFile::DataType GetDataType(const std::string& str) noexcept;
+    IniBuffer::DataType GetDataType(const std::string& str) noexcept;
 }
 
 /** Gets the current DateTime and returns it in a formatted line.
@@ -266,7 +284,7 @@ static std::string GetDateTime() noexcept;
 
 IniException::IniException(const int line, const std::string& message)
 {
-    message_ = "[IniFileException][File: " + std::string(__FILE__)+"][Line: " + std::to_string(line) + "][What: " + message + "]\n";
+    message_ = "[IniBufferException][File: " + std::string(__FILE__)+"][Line: " + std::to_string(line) + "][What: " + message + "]\n";
 }
 
 const char* IniException::what() const throw()
@@ -278,19 +296,19 @@ const char* IniException::what() const throw()
 //-----------------------------------------------------------------------------------
 // Stringified Value
 
-IniFile::Section::StringifiedValue::StringifiedValue() noexcept
+IniBuffer::Section::StringifiedValue::StringifiedValue() noexcept
 : value_(""),
   type_(DataType::EMPTY)
 {}
 
-IniFile::Section::StringifiedValue::StringifiedValue(const std::string& value) noexcept
+IniBuffer::Section::StringifiedValue::StringifiedValue(const std::string& value) noexcept
 {
     type_ = internal::GetDataType(value);
     value_ = value;
 }
 
 template<typename ValueT>
-ValueT IniFile::Section::StringifiedValue::GetValue() const
+ValueT IniBuffer::Section::StringifiedValue::GetValue() const
 {
     try
     {
@@ -306,13 +324,13 @@ ValueT IniFile::Section::StringifiedValue::GetValue() const
     }
 }
 
-const std::string&  IniFile::Section::StringifiedValue::GetValueAsString() const noexcept
+const std::string&  IniBuffer::Section::StringifiedValue::GetValueAsString() const noexcept
 {
     return value_;
 }
 
 template<>
-std::string IniFile::Section::StringifiedValue::CastValue<std::string>() const
+std::string IniBuffer::Section::StringifiedValue::CastValue<std::string>() const
 {
     if(type_ == DataType::STRING)
     {
@@ -325,7 +343,7 @@ std::string IniFile::Section::StringifiedValue::CastValue<std::string>() const
 }
 
 template<>
-int IniFile::Section::StringifiedValue::CastValue<int>() const
+int IniBuffer::Section::StringifiedValue::CastValue<int>() const
 {
     try
     {
@@ -346,7 +364,7 @@ int IniFile::Section::StringifiedValue::CastValue<int>() const
 }
 
 template<>
-float IniFile::Section::StringifiedValue::CastValue<float>() const
+float IniBuffer::Section::StringifiedValue::CastValue<float>() const
 {
     try
     {
@@ -367,7 +385,7 @@ float IniFile::Section::StringifiedValue::CastValue<float>() const
 }
 
 template<>
-bool IniFile::Section::StringifiedValue::CastValue<bool>() const
+bool IniBuffer::Section::StringifiedValue::CastValue<bool>() const
 {
     try
     {
@@ -396,13 +414,13 @@ bool IniFile::Section::StringifiedValue::CastValue<bool>() const
 }
 
 template<typename ValueT>
-ValueT IniFile::Section::StringifiedValue::CastValue() const
+ValueT IniBuffer::Section::StringifiedValue::CastValue() const
 {
      throw INI_EXCEPTION("Stored value is not supported for typecasting.");
 }
 
 
-IniFile::Section::StringifiedValue::~StringifiedValue() noexcept
+IniBuffer::Section::StringifiedValue::~StringifiedValue() noexcept
 {
     value_ = "";
     type_ = DataType::EMPTY;
@@ -410,25 +428,25 @@ IniFile::Section::StringifiedValue::~StringifiedValue() noexcept
 
 //-----------------------------------------------------------------------------------
 // Section
-IniFile::Section::Section() noexcept
+IniBuffer::Section::Section() noexcept
 : name_("")
 {
     properties_.clear();
 }
 
-IniFile::Section::Section(const std::string& name) noexcept
+IniBuffer::Section::Section(const std::string& name) noexcept
 : name_(name)
 {
     properties_.clear();
 }
 
-const std::string& IniFile::Section::GetName() const noexcept
+const std::string& IniBuffer::Section::GetName() const noexcept
 {
     return name_;
 }
 
 template<typename ValueT>
-ValueT IniFile::Section::GetValue(const std::string& key_name) const
+ValueT IniBuffer::Section::GetValue(const std::string& key_name) const
 {
     if(properties_.find(key_name) != properties_.end())
     {
@@ -438,7 +456,7 @@ ValueT IniFile::Section::GetValue(const std::string& key_name) const
         }
         catch(const std::out_of_range& e)
         {
-              LOG(1, std::string("Out of Range: ") + e.what());
+              INI_EXCEPTION(std::string("properties_ variable access out of range: ") + e.what());
         }
     }
     else
@@ -447,7 +465,7 @@ ValueT IniFile::Section::GetValue(const std::string& key_name) const
     }
 }
 
-void IniFile::Section::AddProperty(const std::string& key, const std::string& value) noexcept
+void IniBuffer::Section::AddProperty(const std::string& key, const std::string& value) noexcept
 {
     if(properties_.emplace(key, StringifiedValue(value)).second == true)
     {
@@ -459,7 +477,7 @@ void IniFile::Section::AddProperty(const std::string& key, const std::string& va
     }
 }
 
-void IniFile::Section::WriteSection(std::ofstream& file)
+void IniBuffer::Section::WriteSection(std::ofstream& file)
 {
     try
     {
@@ -474,15 +492,15 @@ void IniFile::Section::WriteSection(std::ofstream& file)
     catch(...){throw INI_EXCEPTION("Unknown Exception occurred").what();}
 }
 
-IniFile::Section::~Section() noexcept
+IniBuffer::Section::~Section() noexcept
 {
     properties_.clear();
 }
 
 //-----------------------------------------------------------------------------------
-// IniFile
+// IniBuffer
 
-void IniFile::LoadFile(const std::string& fullfilename)
+void IniBuffer::LoadFile(const std::string& fullfilename)
 {
     try
     {
@@ -493,7 +511,7 @@ void IniFile::LoadFile(const std::string& fullfilename)
     catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
 }
 
-void IniFile::WriteFile(const std::string& fullfilename) const
+void IniBuffer::WriteFile(const std::string& fullfilename) const
 {
     std::ofstream file;
     file.exceptions(std::ofstream::failbit);
@@ -501,7 +519,7 @@ void IniFile::WriteFile(const std::string& fullfilename) const
     {
         file.open (fullfilename, std::ios::out | std::ios::trunc);
     }
-    catch(std::ios_base::failure& e){throw INI_EXCEPTION("Can not open file. Maybe fullfilename is invalid.");}
+    catch(std::ios_base::failure& e){throw INI_EXCEPTION("Can not open file. Maybe fullfilename is invalid. Filename: "+fullfilename);}
     try
     {
         file << "# Configuration File\n";
@@ -513,6 +531,7 @@ void IniFile::WriteFile(const std::string& fullfilename) const
         }
 
         file.close();
+        LOG("Wrote ini-file to disk: "+fullfilename);
     }
     catch(std::ios_base::failure& e){throw INI_EXCEPTION("Error writing header to file: " + std::string(e.what()));}
     catch(IniException& e){throw;}
@@ -520,13 +539,14 @@ void IniFile::WriteFile(const std::string& fullfilename) const
     catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
 }
 
-void IniFile::Clear() noexcept
+void IniBuffer::Clear() noexcept
 {
     sections_.clear();
+    LOG("Cleared IniBuffer.");
 }
 
 template<typename ValueT>
-ValueT IniFile::GetValue(const std::string& section_name, const std::string& key_name) const
+ValueT IniBuffer::GetValue(const std::string& section_name, const std::string& key_name) const
 {
     if(sections_.find(section_name) != sections_.end())
     {
@@ -540,7 +560,7 @@ ValueT IniFile::GetValue(const std::string& section_name, const std::string& key
 }
 
 template<typename ValueT>
-void IniFile::AddValue(const std::string& section_name, const std::string& key_name, const ValueT& value)
+void IniBuffer::AddValue(const std::string& section_name, const std::string& key_name, const ValueT& value)
 {
     std::string stringified_value;
     try
@@ -563,22 +583,21 @@ void IniFile::AddValue(const std::string& section_name, const std::string& key_n
     }
 }
 
-void IniFile::AddEmptySection(const std::string& section_name) noexcept
+void IniBuffer::AddEmptySection(const std::string& section_name) noexcept
 {
     Section section(section_name);
     AddSection(section);
 }
 
-void IniFile::AddSection(const Section& section) noexcept
+void IniBuffer::AddSection(const Section& section) noexcept
 {
     if(!sections_.emplace(section.GetName(), section).second)
     { // Section already present -> overwrite
-        LOG(1, "Overwritten duplicated section: " + section.GetName());
         sections_.at(section.GetName()) = section;
     }
 }
 
-void IniFile::ParseFile(const std::string& fullfilename)
+void IniBuffer::ParseFile(const std::string& fullfilename)
 {
     std::ifstream fstrm;
 
@@ -608,7 +627,7 @@ void IniFile::ParseFile(const std::string& fullfilename)
         }
         catch(std::ios_base::failure& e)
         {
-            if(fstrm.eof()){LOG(1, "ini-file: Reached end of file."); break;}
+            if(fstrm.eof()){LOG("Reached end of ini file."); break;}
             else {throw;}
         }
 
@@ -680,13 +699,13 @@ void IniFile::ParseFile(const std::string& fullfilename)
 }
 
 template<>
-std::string IniFile::Stringify<std::string>(const std::string& value) const
+std::string IniBuffer::Stringify<std::string>(const std::string& value) const
 {
     return value;
 }
 
 template<>
-std::string IniFile::Stringify<int>(const int& value) const
+std::string IniBuffer::Stringify<int>(const int& value) const
 {
     try {return std::to_string(value);}
     catch(const std::length_error& e){throw INI_EXCEPTION("Stringified value is too long. length_error: "+std::string(e.what()));}
@@ -694,7 +713,7 @@ std::string IniFile::Stringify<int>(const int& value) const
 }
 
 template<>
-std::string IniFile::Stringify<float>(const float& value) const
+std::string IniBuffer::Stringify<float>(const float& value) const
 {
     try {return std::to_string(value);}
     catch(const std::length_error& e){throw INI_EXCEPTION("Stringified value is too long. length_error: "+std::string(e.what()));}
@@ -703,7 +722,7 @@ std::string IniFile::Stringify<float>(const float& value) const
 
 // Booleans are stored as string and identified later.
 template<typename ValueT>
-std::string IniFile::Stringify(const ValueT& value) const
+std::string IniBuffer::Stringify(const ValueT& value) const
 {
     throw INI_EXCEPTION("The Requestet Datatype is not supported to stringify.");
 }
@@ -723,12 +742,12 @@ std::string GetDateTime() noexcept
 
 namespace internal
 {
-    IniFile::DataType GetDataType(const std::string& str) noexcept
+    IniBuffer::DataType GetDataType(const std::string& str) noexcept
     {
         std::string::size_type start_pos = 0;
         if(start_pos = str.find_first_not_of(" ", start_pos) == std::string::npos)
         {
-            return IniFile::DataType::EMPTY;
+            return IniBuffer::DataType::EMPTY;
         }
 
         if(0 == str.compare("true") ||
@@ -738,7 +757,7 @@ namespace internal
            0 == str.compare("FALSE") ||
            0 == str.compare("False"))
         {
-            return IniFile::DataType::BOOL;
+            return IniBuffer::DataType::BOOL;
         }
 
         if((str[start_pos] == '-') || str[start_pos] == '+')
@@ -748,15 +767,16 @@ namespace internal
 
         if(str.find_first_not_of("0123456789.", start_pos) != std::string::npos)
         {
-             return IniFile::DataType::STRING;
+             return IniBuffer::DataType::STRING;
         }
         else if(str.find_first_of(".", start_pos) == std::string::npos)
         {
-            return IniFile::DataType::INT;
+            return IniBuffer::DataType::INT;
         }
         else
         {
-            return IniFile::DataType::FLOAT;
+            return IniBuffer::DataType::FLOAT;
         }
     }
 }
+#endif

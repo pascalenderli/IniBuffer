@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# Result files from tests
+resuts/*

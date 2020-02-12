@@ -5,8 +5,7 @@
  * @brief Demo Executable for IniFile class,
  */
 
-
-#include"ini_file.h"
+#include"ini_buffer.h"
 #include<time.h>
 
 int main()
@@ -24,10 +23,10 @@ int main()
     {
     	try
     	{
-            IniFile ini;
-            ini.LoadFile("test.ini");
-            ini.AddValue("aded_test_section", "key1", std::string("text1"));
-            ini.WriteFile("test_copy.ini");
+            IniBuffer ini;
+            ini.LoadFile("../data/test.ini");
+            ini.AddValue("added_test_section", "key1", std::string("text1"));
+            ini.WriteFile("../results/test_result.ini");
 
             bool c1 = ini.GetValue<bool>("06_booleans", "key01");
             bool c2 = ini.GetValue<bool>("06_booleans", "key02");
@@ -41,7 +40,7 @@ int main()
         }
         catch(IniException& e)
         {
-            LOG(1, e.what());
+            std::cout<<e.what()<<'\n';
             abort();
         }
     }
@@ -50,7 +49,6 @@ int main()
 
     if(run_benchmark)
     {
-        THRESH = 10;
         clock_t t;
         clock_t dt;
         try
@@ -58,9 +56,9 @@ int main()
             for(int i = 1; i<=1000; ++i)
             {
                 dt = clock();
-                IniFile ini_performance;
-                ini_performance.LoadFile("performance.ini");
-                ini_performance.WriteFile("performance2.ini");
+                IniBuffer ini_performance;
+                ini_performance.LoadFile("../data/performance.ini");
+                ini_performance.WriteFile("../results/performance_result.ini");
                 dt = clock()-dt;
                 t = t + (dt-t)/i;
                 ini_performance.Clear();
@@ -69,7 +67,7 @@ int main()
         }
         catch(IniException& e)
         {
-            LOG(1, e.what());
+            std::cout<<e.what()<<'\n';
             abort();
         }
     }
