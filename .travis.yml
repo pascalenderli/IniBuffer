@@ -1,4 +1,25 @@
 language: cpp
-compiler:
-  - clang
-  - gcc
+
+dist: bionic
+
+sudo: false
+
+os:
+- linux
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-6
+
+script:
+  - g++ main.cpp -O3
+
+branches:
+  only:
+  - master
+
+notifications:
+  email: false
