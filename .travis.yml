@@ -15,7 +15,7 @@ addons:
       - g++-6
 
 script:
-  - g++ main.cpp -O3
+  - g++ src/main.cpp -O3
 
 branches:
   only:
