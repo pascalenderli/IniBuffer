@@ -1,11 +1,7 @@
+
 language: cpp
-
 dist: bionic
-
 sudo: false
-
-os:
-- linux
 
 addons:
   apt:
@@ -14,8 +10,28 @@ addons:
     packages:
       - g++-6
 
+matrix:
+  include:
+    - os: linux
+      env:
+        - MATRIX_EVAL="CXX=g++-6 CC=gcc-6"
+
+    - os: osx
+      osx_image: xcode8
+      env:
+        - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
+
+    - os: windows
+      env:
+        - MATRIX_EVAL="CC=CL.exe && CXX=CL.exe"
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+
 script:
-  - g++ src/main.cpp -O3
+  - cd src
+  - CXX --version
+  - CXX main.cpp -O3
 
 branches:
   only:
