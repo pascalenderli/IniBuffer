@@ -30,8 +30,8 @@ before_install:
 
 script:
   - cd src
-  - CXX --version
-  - CXX main.cpp -O3
+  - $CXX --version
+  - $CXX main.cpp -O3
 
 branches:
   only:
