@@ -9,20 +9,14 @@ matrix:
     compiler: clang
 
   - os: osx
-    compiler: gcc
+    osx_image: xcode8
+    env:
+      - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
 
   - os: osx
     compiler: clang
 
   - os: windows
-    env:
-      - MATRIX_EVAL="CC=cl.exe && CXX=cl.exe"
-    before_install:
-      - eval "${MATRIX_EVAL}"
-    after_failure:
-      - ls ..
-      - ls
-      - ls Debug
 
 script:
   - cmake --version
@@ -30,8 +24,6 @@ script:
   - cd src/build
   - cmake ..
   - cmake  --build .
-
-
 
 branches:
   only:
