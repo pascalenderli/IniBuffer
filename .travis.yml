@@ -6,6 +6,7 @@ compiler:
 os:
   - linux
   - osx
+  - windows
 
 script:
   - cmake --version
