@@ -5,11 +5,24 @@ matrix:
   - os: linux
     compiler: gcc
 
+  - os: linux
+    compiler: clang
+
+  - os: osx
+    compiler: gcc
+
+  - os: osx
+    compiler: clang
+
   - os: windows
     env:
       - MATRIX_EVAL="CC=CL.exe && CXX=CL.exe"
     before_install:
       - eval "${MATRIX_EVAL}"
+    after_failure:
+      - ls ..
+      - ls
+      - ls Debug
 
 script:
   - cmake --version
@@ -17,7 +30,8 @@ script:
   - cd src/build
   - cmake ..
   - cmake  --build .
-  - ls Debug
+
+
 
 branches:
   only:
