@@ -356,8 +356,8 @@ int IniBuffer::Section::StringifiedValue::CastValue<int>() const
             throw INI_EXCEPTION("Stored value is not an int.");
         }
     }
-    catch(const std::invalid_argument& e){INI_EXCEPTION("Invalid Argument: " + std::string(e.what()));}
-    catch(const std::out_of_range& e){INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
+    catch(const std::invalid_argument& e){throw INI_EXCEPTION("Invalid Argument: " + std::string(e.what()));}
+    catch(const std::out_of_range& e){throw INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
     catch(const IniException& e){throw;}
     catch(const std::exception& e){throw INI_EXCEPTION( std::string(e.what()));}
     catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
@@ -377,8 +377,8 @@ float IniBuffer::Section::StringifiedValue::CastValue<float>() const
             throw INI_EXCEPTION("Stored value is not a float.");
         }
     }
-    catch(const std::invalid_argument& e){INI_EXCEPTION("Invalid Argument: " + std::string(e.what()));}
-    catch(const std::out_of_range& e){INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
+    catch(const std::invalid_argument& e){throw INI_EXCEPTION("Invalid Argument: " + std::string(e.what()));}
+    catch(const std::out_of_range& e){throw INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
     catch(const IniException& e){throw;}
     catch(const std::exception& e){throw INI_EXCEPTION( std::string(e.what()));}
     catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
@@ -407,7 +407,7 @@ bool IniBuffer::Section::StringifiedValue::CastValue<bool>() const
             INI_EXCEPTION("Stored value is not a boolean.");
         }
     }
-    catch(const std::out_of_range& e){INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
+    catch(const std::out_of_range& e){throw INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
     catch(const IniException& e){throw;}
     catch(const std::exception& e){throw INI_EXCEPTION( std::string(e.what()));}
     catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
@@ -745,7 +745,7 @@ namespace internal
     IniBuffer::DataType GetDataType(const std::string& str) noexcept
     {
         std::string::size_type start_pos = 0;
-        if(start_pos = str.find_first_not_of(" ", start_pos) == std::string::npos)
+        if((start_pos = str.find_first_not_of(" ", start_pos)) == std::string::npos)
         {
             return IniBuffer::DataType::EMPTY;
         }

@@ -9,6 +9,7 @@
 #define STR_MANIP_H_
 
 #include<algorithm>
+#include<cctype>
 #include<stdio.h>
 #include<string>
 #include<time.h>
