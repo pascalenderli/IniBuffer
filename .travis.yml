@@ -4,8 +4,6 @@ compiler:
   - gcc
 
 os:
-  - linux
-  - osx
   - windows
 
 script:
@@ -14,8 +12,7 @@ script:
   - cd src/build
   - cmake ..
   - cmake  --build .
-  - ls ..
-  - ls
+  - ls Debug
 
 branches:
   only:
