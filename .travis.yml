@@ -9,14 +9,15 @@ matrix:
           - ubuntu-toolchain-r-test
         packages:
           - g++-7
-        script:
-          - cmake --version
-          - export CC=gcc-7
-          - export CXX=g++-7
-          - mkdir src/build
-          - cd src/build
-          - cmake ..
-          - cmake  --build .
+
+script:
+  - cmake --version
+  - export CC=gcc-7
+  - export CXX=g++-7
+  - mkdir src/build
+  - cd src/build
+  - cmake ..
+  - cmake  --build .
 
 branches:
   only:
