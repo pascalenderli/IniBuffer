@@ -12,6 +12,8 @@ matrix:
     osx_image: xcode8
     env:
       - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
+    before_install:
+      - eval "${MATRIX_EVAL}"
 
   - os: osx
     compiler: clang
