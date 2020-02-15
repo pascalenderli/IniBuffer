@@ -1,10 +1,10 @@
 language: cpp
-compiler:
-  - clang
-  - gcc
 
 matrix:
   include:
+  . os: linux
+    compiler: gcc
+
   - os: windows
     env:
       - MATRIX_EVAL="CC=CL.exe && CXX=CL.exe"
