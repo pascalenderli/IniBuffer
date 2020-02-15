@@ -74,7 +74,7 @@ has_edges=true
 ## Interface Usage
 The public functions are described below. If a key or section is duplicated, the values are overwritten. A feature of this IniBuffer is the automatic type casting of parsed values.
 
-![IniBuffer data pipeline.](media/pipeline.png)
+![Pipeline](media/IniPipeline.png)
 
 ### Constructor
 Constructs an empty IniBuffer object.
