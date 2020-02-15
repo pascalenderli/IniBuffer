@@ -9,8 +9,6 @@ os:
 
 script:
   - cmake --version
-  - export CC=gcc-7
-  - export CXX=g++-7
   - mkdir src/build
   - cd src/build
   - cmake ..
