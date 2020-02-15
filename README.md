@@ -53,7 +53,7 @@ price of a phone = 1000
 ### Comments
 Comments start with a '#' or a ';'. Everything to the right to one of the two delimiters is considered as comment and is ignored by the parser.
 
-### Valid ini-File Example
+### Valid ini-file Example
 shapes.ini
 ```text
 # I an a dummy ini-file.
@@ -80,33 +80,33 @@ Constructs an empty IniBuffer object.
 IniBuffer();
 ```
 
-### Loading a file from disk
+### Loading a File from Disk
 Parses a given ini-file into the buffer.
 Integer, floats, and bools (true, false, TRUE, FALSE, True, False) are automatically type casted to its proper types. All other values are treated as strings.
 ```cpp
 void LoadFile(const std::string& fullfilename);
 ```
 
-### Writing a file to disk
+### Writing a File to Disk
 Writes the whole content of the buffer to an ini-file on the disk.
 ```cpp
 void WriteFile(const std::string& fullfilename) const;
 ```
 
-### Clearing the buffer
+### Clearing the Buffer
 Removes all data in the buffer.
 ```cpp
 void Clear() noexcept;
 ```
 
-### Returning a value from the buffer
+### Returning a Value from the Vuffer
 A value can be requested from the ini-file buffer to store it in another variable. In order to do this, the function GetValue must be called. It accepts two arguments used to locate the value. The section name and the key name. This function casts the value automatically to the type of the variable. If the requested type does not match the type of the value, an exception is thrown. The supported data-types are bool, int, float and std::sting.
 ```cpp
 template<typename ValueT>
 ValueT GetValue(const std::string& section_name, const std::string& key_name) const;
 ```
 
-### Adding or Updating a value in the buffer
+### Adding or Updating a Value in the Buffer
 Adds a new value to the buffer. Any of the supported data types can be passed. The supported data types are bool, int, float and std::sting.
 ```cpp
 template<typename ValueT>

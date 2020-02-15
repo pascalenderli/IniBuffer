@@ -404,7 +404,7 @@ bool IniBuffer::Section::StringifiedValue::CastValue<bool>() const
         }
         else
         {
-            INI_EXCEPTION("Stored value is not a boolean.");
+            throw INI_EXCEPTION("Stored value is not a boolean.");
         }
     }
     catch(const std::out_of_range& e){throw INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
@@ -456,7 +456,7 @@ ValueT IniBuffer::Section::GetValue(const std::string& key_name) const
         }
         catch(const std::out_of_range& e)
         {
-              INI_EXCEPTION(std::string("properties_ variable access out of range: ") + e.what());
+              throw INI_EXCEPTION(std::string("properties_ variable access out of range: ") + e.what());
         }
     }
     else
