@@ -2,7 +2,8 @@ language: cpp
 
 matrix:
   include:
-  . os: linux
+  - os: linux
+    compiler: gcc
 
   - os: windows
     env:
