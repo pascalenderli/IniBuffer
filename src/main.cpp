@@ -24,9 +24,9 @@ int main()
     	try
     	{
             IniBuffer ini;
-            ini.LoadFile("../data/test.ini");
+            ini.LoadFile("data/test.ini");
             ini.AddValue("added_test_section", "key1", std::string("text1"));
-            ini.WriteFile("../results/test_result.ini");
+            ini.WriteFile("results/test_result.ini");
 
             bool c1 = ini.GetValue<bool>("06_booleans", "key01");
             bool c2 = ini.GetValue<bool>("06_booleans", "key02");
@@ -57,8 +57,8 @@ int main()
             {
                 dt = clock();
                 IniBuffer ini_performance;
-                ini_performance.LoadFile("../data/performance.ini");
-                ini_performance.WriteFile("../results/performance_result.ini");
+                ini_performance.LoadFile("data/performance.ini");
+                ini_performance.WriteFile("results/performance_result.ini");
                 dt = clock()-dt;
                 t = t + (dt-t)/i;
                 ini_performance.Clear();
