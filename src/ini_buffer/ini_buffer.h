@@ -102,6 +102,12 @@ class IniBuffer
     /// Clears the whole state of the IniBuffer object.
     void Clear() noexcept;
 
+    /// Delets a whole section in the buffer.
+    void EraseSection(const std::string& section_name) noexcept;
+
+    /// Delets a key/value pair in the buffer.
+    void EraseProperty(const std::string& section_name, const std::string& key_name) noexcept;
+
     /** Receive a requested value from the buffer.
     *
     *   @details
@@ -172,6 +178,9 @@ class IniBuffer
         *   @param value The value which belongs to the key as string. (type is detected at insertion.)
         */
         void AddProperty(const std::string& key, const std::string& value) noexcept;
+
+        /// Deletes a key|vaue pair.
+        void EraseProperty(const std::string& key) noexcept;
 
         /// Writes this section to the file.
         void WriteSection(std::ofstream& file);
@@ -477,6 +486,11 @@ void IniBuffer::Section::AddProperty(const std::string& key, const std::string& 
     }
 }
 
+void IniBuffer::Section::EraseProperty(const std::string& key) noexcept
+{
+    properties_.erase(key);
+}
+
 void IniBuffer::Section::WriteSection(std::ofstream& file)
 {
     try
@@ -595,6 +609,18 @@ void IniBuffer::AddSection(const Section& section) noexcept
     { // Section already present -> overwrite
         sections_.at(section.GetName()) = section;
     }
+}
+
+void IniBuffer::EraseSection(const std::string& section_name) noexcept
+{
+    sections_.erase(section_name);
+}
+
+void IniBuffer::EraseProperty(const std::string& section_name, const std::string& key_name) noexcept
+{
+
+    sections_.at(section_name).EraseProperty(key_name);
+
 }
 
 void IniBuffer::ParseFile(const std::string& fullfilename)

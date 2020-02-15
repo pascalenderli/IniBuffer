@@ -2,7 +2,7 @@
  * @file main.cpp
  * @author Pascal Enderli
  * @date 2020.01.19
- * @brief Demo Executable for IniFile class,
+ * @brief Demo executable for IniFile class,
  */
 
 #include"ini_buffer.h"
@@ -14,7 +14,7 @@ int main()
     // Configuration
 
     bool run_test = true;
-    bool run_benchmark = true;
+    bool run_benchmark = false;
 
     //-----------------------------------------------------------------------------------
     // Simple Test
@@ -63,7 +63,7 @@ int main()
                 t = t + (dt-t)/i;
                 ini_performance.Clear();
             }
-            std::cout<<"Average parsing time: "<<1000*((float)t)/(CLOCKS_PER_SEC)<<" ms\n";
+            std::cout<<"Average parsing time: "<<1000*(((float)t)/((float)CLOCKS_PER_SEC))<<" ms\n";
         }
         catch(IniException& e)
         {
