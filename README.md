@@ -115,6 +115,13 @@ template<typename ValueT>
 void AddValue(const std::string& section_name, const std::string& key_name, const ValueT& value);
 ```
 
+### Deleting a Section or a Property
+Given the section and property names, entries are erased from the buffer.
+```cpp
+void EraseSection(const std::string& section_name) noexcept;
+void EraseProperty(const std::string& section_name, const std::string& key_name) noexcept;
+```
+
 ## Exceptions
 The Class returns an Exception of type IniException if something goes wrong.
 The what() methods returns a meaningful error message of the form: `[IniBufferException][File: <filename>][Line: <line_nr>][What: <message>]`
