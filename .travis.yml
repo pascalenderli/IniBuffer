@@ -3,8 +3,9 @@ compiler:
   - clang
   - gcc
 
-os:
-  - windows
+matrix:
+  include:
+  - os: windows
     env:
       - MATRIX_EVAL="CC=CL.exe && CXX=CL.exe"
     before_install:
