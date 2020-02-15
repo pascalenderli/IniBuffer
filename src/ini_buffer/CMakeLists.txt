@@ -1,6 +1,6 @@
 project(IniBufferLib VERSION 1.0 LANGUAGES CXX)
 
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
 ini_buffer.h
 ini_buffer.cpp
 str_manip.h)
