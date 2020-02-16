@@ -7,7 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #---------------------------------------------------------------------
 # Build Configuration
 
-set(build_python_package ON)
+set(build_python_package OFF)
 
 #---------------------------------------------------------------------
 # Build IniBuffer library
