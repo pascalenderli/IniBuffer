@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.1...3.16)
+project(IniBuffer VERSION 1.0 LANGUAGES CXX)
+
+#---------------------------------------------------------------------
+# Make Python interface.
+
+set(PYBIND11_PYTHON_VERSION 3.6)
+set(PYBIND11_CPP_STANDARD -std=c++11)
+
+add_subdirectory(pybind11)
+pybind11_add_module(${PROJECT_NAME} python_interface.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE IniBufferLib)
+
+#---------------------------------------------------------------------
+# Notes for making the python interface:
+# required stuff before building:
+# sudo apt-get install python3-dev
+# sudo apt install python3-distutils
+# git clone --recursive git@github.com:pybind/pybind11.git
+#
+# required stuff after building:
+# install the shared labrary here or make a symlink from there o the shared .so lib.
+# /usr/lib/python3/dist-packages

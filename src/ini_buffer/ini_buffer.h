@@ -84,7 +84,7 @@ class IniBuffer
     //===================================================================================
     // Begin of public IniBuffer Interface
 
-    /** Loads a specified ini file and parses it into the RAM.
+    /** Loads a specified ini file and parses it into the buffer.
     *
     *   @param fullfilename The path and filename pointing to the configuration file.
     */
@@ -327,10 +327,7 @@ ValueT IniBuffer::Section::StringifiedValue::GetValue() const
     {
         throw INI_EXCEPTION("Bad Cast: " + std::string(e.what()));
     }
-    catch(...)
-    {
-        throw INI_EXCEPTION("Unknown exception occurred.");
-    }
+    catch(...){throw;}
 }
 
 const std::string&  IniBuffer::Section::StringifiedValue::GetValueAsString() const noexcept
@@ -369,7 +366,7 @@ int IniBuffer::Section::StringifiedValue::CastValue<int>() const
     catch(const std::out_of_range& e){throw INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
     catch(const IniException& e){throw;}
     catch(const std::exception& e){throw INI_EXCEPTION( std::string(e.what()));}
-    catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
+    catch(...){throw;}
 }
 
 template<>
@@ -390,7 +387,7 @@ float IniBuffer::Section::StringifiedValue::CastValue<float>() const
     catch(const std::out_of_range& e){throw INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
     catch(const IniException& e){throw;}
     catch(const std::exception& e){throw INI_EXCEPTION( std::string(e.what()));}
-    catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
+    catch(...){throw;}
 }
 
 template<>
@@ -419,7 +416,7 @@ bool IniBuffer::Section::StringifiedValue::CastValue<bool>() const
     catch(const std::out_of_range& e){throw INI_EXCEPTION("Out Of Range: " + std::string(e.what()));}
     catch(const IniException& e){throw;}
     catch(const std::exception& e){throw INI_EXCEPTION( std::string(e.what()));}
-    catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
+    catch(...){throw;}
 }
 
 template<typename ValueT>
@@ -503,7 +500,7 @@ void IniBuffer::Section::WriteSection(std::ofstream& file)
         file<<"\n";
     }
     catch(std::ios_base::failure& e){throw INI_EXCEPTION("Error writing sections to file. Section Name:"+ name_ +"; Message: "+ std::string(e.what()));}
-    catch(...){throw INI_EXCEPTION("Unknown Exception occurred").what();}
+    catch(...){throw;}
 }
 
 IniBuffer::Section::~Section() noexcept
@@ -522,7 +519,7 @@ void IniBuffer::LoadFile(const std::string& fullfilename)
     }
     catch(IniException& e) {throw;}
     catch(std::exception& e){throw INI_EXCEPTION( e.what());}
-    catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
+    catch(...){throw;}
 }
 
 void IniBuffer::WriteFile(const std::string& fullfilename) const
@@ -550,7 +547,7 @@ void IniBuffer::WriteFile(const std::string& fullfilename) const
     catch(std::ios_base::failure& e){throw INI_EXCEPTION("Error writing header to file: " + std::string(e.what()));}
     catch(IniException& e){throw;}
     catch(std::exception& e){throw INI_EXCEPTION(e.what());}
-    catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
+    catch(...){throw;}
 }
 
 void IniBuffer::Clear() noexcept
@@ -583,7 +580,7 @@ void IniBuffer::AddValue(const std::string& section_name, const std::string& key
     }
     catch(IniException& e){throw;}
     catch(std::exception& e){throw INI_EXCEPTION(e.what());}
-    catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
+    catch(...){throw;}
 
     if(sections_.find(section_name)!=sections_.end())
     {
@@ -715,7 +712,7 @@ void IniBuffer::ParseFile(const std::string& fullfilename)
             }
             catch(IniException& e){throw;}
             catch(std::exception& e){throw INI_EXCEPTION(e.what());}
-            catch(...){throw INI_EXCEPTION("Unknown exception occurred.");}
+            catch(...){throw;}
         }
         else
         {

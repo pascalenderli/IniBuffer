@@ -1,7 +1,7 @@
 
 
 # IniBuffer [![Build Status](https://travis-ci.org/pascalenderli/IniBuffer.svg?branch=master)](https://travis-ci.org/pascalenderli/IniBuffer)
-This is a C++ class, which exposes a public interface to work with an ini configuration file. There are functionalities to read or write a file or manipulate the content in the buffer. The buffer is developed by considering user friendliness, simplicity performance, platform independence and proper error handling. Only the standard is used.
+This is a C++ class, which exposes a public interface to work with an ini configuration file. There are functionalities to read or write a file or to manipulate the content in the buffer. The buffer is developed by considering user friendliness, simplicity performance, platform independence and proper error handling. Only the standard library is used (C++11).
 
 ## Background
 Ini files are simple and human readable configuration files. They are widely used in computer applications to store system configurations on the hard-disk. The structure is handy to pass groups of data to their intended destinations inside an application.
