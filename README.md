@@ -216,3 +216,9 @@ key_name = "Diameter"
 value = ini.GetValue_int(section_name, key_name)
 print("section:"+section_name+"; key:"+key_name+"; value:"+str(value))
 ```
+## Open Tasks
+* Detailed catch2 tests for c++ code.
+* Python interface tests.
+* python setup.py and developping a single GetValue function for all types.
+* Generate recursive stackktrace for IniExceptions.
+* Generating MATLAB binding 
