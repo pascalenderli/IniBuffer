@@ -3,10 +3,41 @@
 # IniBuffer [![Build Status](https://travis-ci.org/pascalenderli/IniBuffer.svg?branch=master)](https://travis-ci.org/pascalenderli/IniBuffer)
 This is a C++ class, which exposes a public interface to work with an ini configuration file. There are functionalities to read or write a file or to manipulate the content in the buffer. The buffer is developed by considering user friendliness, simplicity performance, platform independence and proper error handling. Only the standard library is used (C++11).
 
+## How to Build
+### Without Python Package
+Navigate into the download folder of this repository (IniBuffer). Then build the project using cmake:
+```shell
+# Build
+mkdir src/build
+cd src/build
+cmake ..
+cmake --build .
+
+# Run example application
+./app/IniBufferExampleApp
+```
+### With Python Package
+If you like to build the python package, you need to set the cmake configuration (build_python_package) to ON.
+Before building the package, you have to install python3-dev and python3-distutils. Make sure you copy the python package binary to "/usr/lib/python3/dist-packages" after building.
+```shell
+# Install prerequisites
+sudo apt install python3-dev
+sudo apt install python3-distutils
+
+# build IniBuffer source
+mkdir src/build
+cd src/build
+cmake -Dbuild_python_package=ON ..
+cmake --build .
+
+# Copy the python binary to python dist-packages
+sudo cp python_interface/IniBuffer.*.so /usr/lib/python3/dist-packages
+```
+
 ## Background
 Ini files are simple and human readable configuration files. They are widely used in computer applications to store system configurations on the hard-disk. The structure is handy to pass groups of data to their intended destinations inside an application.
 
-## Format
+## Ini Format
 The ini format is not well defined. Different systems interpret the files slightly differently or support unequal features.
 This file parser is optimized for simple usage and does only support a minimal but sufficient set of ini-file features.
 
@@ -101,7 +132,7 @@ Removes all data in the buffer.
 void Clear() noexcept;
 ```
 
-### Returning a Value from the Vuffer
+### Returning a Value from the Buffer
 A value can be requested from the ini-file buffer to store it in another variable. In order to do this, the function GetValue must be called. It accepts two arguments used to locate the value. The section name and the key name. This function casts the value automatically to the type of the variable. If the requested type does not match the type of the value, an exception is thrown. The supported data-types are bool, int, float and std::sting.
 ```cpp
 template<typename ValueT>
@@ -140,7 +171,7 @@ catch(IniException& e)
 }
 ```
 
-## Example
+## C++ Example
 
 ```cpp
 try
@@ -165,4 +196,17 @@ $ g++ main.cpp -O3
 $ ./a.out
 Diameter: 700
 Color: red
+```
+## Python Example
+After copying the python binary to "/usr/lib/python3/dist-packages" you can import and use it like below:
+```python
+from IniBuffer import *
+ini = IniBuffer()
+ini.LoadFile("shapes.ini")
+
+section_name = "Circle"
+key_name = "Diameter"
+
+value = ini.GetValue_int(section_name, key_name)
+print("section:"+section_name+"; key:"+key_name+"; value:"+str(value))
 ```
