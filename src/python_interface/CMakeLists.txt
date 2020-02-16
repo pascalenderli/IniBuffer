@@ -16,7 +16,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE IniBufferLib)
 # required stuff before building:
 # sudo apt-get install python3-dev
 # sudo apt install python3-distutils
-# git clone --recursive git@github.com:pybind/pybind11.git
 #
 # required stuff after building:
 # install the shared labrary here or make a symlink from there o the shared .so lib.
