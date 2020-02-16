@@ -2,6 +2,7 @@
 
 # IniBuffer [![Build Status](https://travis-ci.org/pascalenderli/IniBuffer.svg?branch=master)](https://travis-ci.org/pascalenderli/IniBuffer)
 This is a C++ class, which exposes a public interface to work with an ini configuration file. There are functionalities to read or write a file or to manipulate the content in the buffer. The buffer is developed by considering user friendliness, simplicity performance, platform independence and proper error handling. Only the standard library is used (C++11).
+The Repository contains a C++ implementation of the IniBuffer interface and a python binding to use the functionalities as python module.
 
 ## How to Build
 Clone this repository recursively.
