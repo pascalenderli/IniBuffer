@@ -1,8 +1,8 @@
 
 
 # IniBuffer [![Build Status](https://travis-ci.org/pascalenderli/IniBuffer.svg?branch=master)](https://travis-ci.org/pascalenderli/IniBuffer)
-This is a C++ class, which exposes a public interface to work with an ini configuration file. There are functionalities to read or write a file or to manipulate the content in the buffer. The buffer is developed by considering user friendliness, simplicity performance, platform independence and proper error handling. Only the standard library is used (C++11).
-The Repository contains a C++ implementation of the IniBuffer interface and a python binding to use the functionalities as python module.
+This is a C++ class, which exposes a public interface to work with an ini configuration file. There are functionalities to read or write a file or to manipulate the content in the buffer. The buffer is developed by considering user friendliness, simplicity performance, platform independency and proper error handling. Only the standard library is used (C++11).
+The Repository contains a C++ implementation of the IniBuffer interface and a python binding to use the functionalities as a python module.
 
 ## How to Build
 Clone this repository recursively.
@@ -11,7 +11,7 @@ git clone --recursive https://github.com/pascalenderli/IniBuffer.git
 ```
 
 ### Without Python Package
-Navigate into the download folder of this repository (IniBuffer). Then build the project using cmake:
+Navigate into the download folder of this repository. Then build the project using cmake:
 ```shell
 # Build
 mkdir IniBuffer/src/build
@@ -23,7 +23,7 @@ cmake --build .
 ./app/IniBufferExampleApp
 ```
 ### With Python Package
-If you like to build the python package, you need to set the cmake configuration (build_python_package) to ON.
+If you like to build the python package, you need to set the cmake option (build_python_package) to ON.
 Before building the package, you have to install python3-dev and python3-distutils. Make sure you copy the python package binary to "/usr/lib/python3/dist-packages" after building.
 ```shell
 # Install prerequisites
@@ -43,11 +43,11 @@ sudo cp python_interface/IniBuffer.*.so /usr/lib/python3/dist-packages
 ## Background
 Ini files are simple and human readable configuration files. They are widely used in computer applications to store system configurations on the hard-disk. The structure is handy to pass groups of data to their intended destinations inside an application.
 
-## Ini Format
-The ini format is not well defined. Different systems interpret the files slightly differently or support unequal features.
+## Ini - File Format
+The ini format is not well defined. Different systems interpret the files slightly different or support unequal features.
 This file parser is optimized for simple usage and does only support a minimal but sufficient set of ini-file features.
 
-In general an ini-file consists of Sections and Properties.
+In general an ini-file consists of sections and properties.
 
 ### Sections
 Section names are parenthesized with square brackets to the left and right of the unique name string. Each section can be empty or is followed by a set of properties (key|value pairs). Section names can contain white spaces in between words. White spaces in front of the first letter or after the last letter are ignored. Even though this buffer supports using white spaces in section name strings, doing this is considered bad practice.
@@ -72,7 +72,7 @@ Section ]
 ```
 
 ### Properties
-Properties are key|value pairs which belong to a section. This parser does only support ini-files which contain at least one section. Therefore properties must belong to a section. The parser ignores any amount of white spaces in front or after keys or values. White spaces in between key names are not valid. Whit spaces in values are valid and belong to the value string.
+Properties are key|value pairs which belong to a section. This parser does only support ini-files which contain at least one section. Therefore properties must belong to a section. The parser ignores any amount of white spaces in front or after keys or values. White spaces in between key names are not valid. White spaces in values are valid and belong to the value string.
 
 #### Valid  Properties:
 ```text
@@ -88,16 +88,16 @@ switch = true
 price of a phone = 1000
 ```
 ### Comments
-Comments start with a '#' or a ';'. Everything to the right to one of the two delimiters is considered as comment and is ignored by the parser.
+Comments start with a '#' or a ';'. Everything to the right of one of the two delimiters is considered as comment and is ignored by the parser.
 
 ### Valid ini-file Example
 shapes.ini
 ```text
 # I an a dummy ini-file.
-# I am not pretty but I show some ini specific stuff.
-; A not so necessary comment :-P
+# I am not pretty but you are still looking at me :-P
+; A not so necessary comment line :-P
 
-[Circle]           # A Shape.
+[Circle]           # A comment.
 Diameter = 700     ; A comment.
 Color = red
 has_edges = false
@@ -139,7 +139,7 @@ void Clear() noexcept;
 ```
 
 ### Returning a Value from the Buffer
-A value can be requested from the ini-file buffer to store it in another variable. In order to do this, the function GetValue must be called. It accepts two arguments used to locate the value. The section name and the key name. This function casts the value automatically to the type of the variable. If the requested type does not match the type of the value, an exception is thrown. The supported data-types are bool, int, float and std::sting.
+A value can be requested from the IniBuffer to store it in another variable. In order to do this, the function GetValue must be called. It accepts two arguments used to locate the value. The section name and the key name. This function casts the value automatically to the type of the variable. If the requested type does not match the type of the value, an exception is thrown. The supported data-types are bool, int, float and std::sting.
 ```cpp
 template<typename ValueT>
 ValueT GetValue(const std::string& section_name, const std::string& key_name) const;
@@ -153,29 +153,15 @@ void AddValue(const std::string& section_name, const std::string& key_name, cons
 ```
 
 ### Deleting a Section or a Property
-Given the section and property names, entries are erased from the buffer.
+Given the section and property names, corresponding entries are erased from the buffer.
 ```cpp
 void EraseSection(const std::string& section_name) noexcept;
 void EraseProperty(const std::string& section_name, const std::string& key_name) noexcept;
 ```
 
 ## Exceptions
-The Class returns an Exception of type IniException if something goes wrong.
-The what() methods returns a meaningful error message of the form: `[IniBufferException][File: <filename>][Line: <line_nr>][What: <message>]`
-
-```cpp
-try
-{
-    IniBuffer ini;
-    ini.LoadFile("../data/test.ini");
-    ini.AddValue("added_test_section", "key_100", std::string("a text"));
-    ini.WriteFile("../results/test_result.ini");
-}
-catch(IniException& e)
-{
-    std::cout<<e.what()<<'\n';
-}
-```
+The class returns an Exception of type IniException if something goes wrong.
+The what() method returns a meaningful error message of the form: `[IniBufferException][File: <filename>][Line: <line_nr>][What: <message>]`
 
 ## C++ Example
 
@@ -197,14 +183,9 @@ catch(IniException& e)
     abort();
 }
 ```
-```text
-$ g++ main.cpp -O3
-$ ./a.out
-Diameter: 700
-Color: red
-```
+
 ## Python Example
-After copying the python binary to "/usr/lib/python3/dist-packages" you can import and use it like below:
+After copying the python binary to "/usr/lib/python3/dist-packages" you can import and use it like shown below:
 ```python
 from IniBuffer import *
 ini = IniBuffer()
@@ -219,6 +200,6 @@ print("section:"+section_name+"; key:"+key_name+"; value:"+str(value))
 ## Open Tasks
 * Detailed catch2 tests for c++ code.
 * Python interface tests.
-* python setup.py and developping a single GetValue function for all types.
+* Python setup.py and developping a single GetValue function for all types.
 * Generate recursive stackktrace for IniExceptions.
-* Generating MATLAB binding 
+* Generating MATLAB binding
