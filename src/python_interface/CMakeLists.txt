@@ -11,12 +11,15 @@ add_subdirectory(pybind11)
 pybind11_add_module(${PROJECT_NAME} python_interface.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE IniBufferLib)
 
+# Copy python application example to binary folder
+configure_file(../app/python_example.py ../app/python_example.py COPYONLY)
+
 #---------------------------------------------------------------------
 # Notes for making the python interface:
 # required stuff before building:
-# sudo apt-get install python3-dev
+# sudo apt install python3-dev
 # sudo apt install python3-distutils
 #
-# required stuff after building:
-# install the shared labrary here or make a symlink from there o the shared .so lib.
+# Required stuff after building:
+# Copy the shared labrary or make a symlink from from "/usr/lib/python3/dist-packages" to the shared .so lib.
 # /usr/lib/python3/dist-packages

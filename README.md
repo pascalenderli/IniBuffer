@@ -4,12 +4,17 @@
 This is a C++ class, which exposes a public interface to work with an ini configuration file. There are functionalities to read or write a file or to manipulate the content in the buffer. The buffer is developed by considering user friendliness, simplicity performance, platform independence and proper error handling. Only the standard library is used (C++11).
 
 ## How to Build
+Clone this repository recursively.
+```shell
+git clone --recursive https://github.com/pascalenderli/IniBuffer.git
+```
+
 ### Without Python Package
 Navigate into the download folder of this repository (IniBuffer). Then build the project using cmake:
 ```shell
 # Build
-mkdir src/build
-cd src/build
+mkdir IniBuffer/src/build
+cd IniBuffer/src/build
 cmake ..
 cmake --build .
 
