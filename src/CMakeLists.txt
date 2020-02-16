@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 3.1...3.16)
 project(IniBufferExampleApp VERSION 1.0 LANGUAGES CXX)
+
+#---------------------------------------------------------------------
+# Build Configuration
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#---------------------------------------------------------------------
-# Build Configuration
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 
 set(build_python_package OFF)
 
