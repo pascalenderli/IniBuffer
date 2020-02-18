@@ -743,7 +743,19 @@ std::string IniBuffer::Stringify<float>(const float& value) const
     catch(std::bad_alloc& e){throw INI_EXCEPTION("String bad_alloc: "+std::string(e.what()));}
 }
 
-// Booleans are stored as string and identified later.
+template<>
+std::string IniBuffer::Stringify<bool>(const bool& value) const
+{
+    if(value==true)
+    {
+        return std::string("true");
+    }
+    else
+    {
+        return std::string("false");
+    }
+}
+
 template<typename ValueT>
 std::string IniBuffer::Stringify(const ValueT& value) const
 {

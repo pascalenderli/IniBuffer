@@ -4,15 +4,13 @@ project(IniBuffer VERSION 1.0 LANGUAGES CXX)
 #---------------------------------------------------------------------
 # Make Python interface.
 
-set(PYBIND11_PYTHON_VERSION 3.6)
-set(PYBIND11_CPP_STANDARD -std=c++11)
-
-add_subdirectory(pybind11)
-pybind11_add_module(${PROJECT_NAME} python_interface.cpp)
+pybind11_add_module(${PROJECT_NAME} python_interface.cpp ini_buffer_py.h)
 target_link_libraries(${PROJECT_NAME} PRIVATE IniBufferLib)
 
 # Copy python application example to binary folder
 configure_file(../app/python_example.py ../app/python_example.py COPYONLY)
+configure_file(../app/python_example.py python_example.py COPYONLY)
+configure_file(__init__.py __init__.py COPYONLY)
 
 #---------------------------------------------------------------------
 # Notes for making the python interface:

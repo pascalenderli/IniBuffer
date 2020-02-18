@@ -20,7 +20,7 @@ option(build_python_package OFF)
 add_subdirectory(ini_buffer)
 
 #---------------------------------------------------------------------
-#Make Foleders for test data
+# Make Foleders for test data
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/data)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/results)
@@ -36,5 +36,9 @@ add_subdirectory(app)
 # Make Python interace.
 
 if(${build_python_package})
+set(PYBIND11_PYTHON_VERSION 3.6)
+set(PYBIND11_CPP_STANDARD -std=c++11)
+
+add_subdirectory(pybind11)
 add_subdirectory(python_interface)
 endif()

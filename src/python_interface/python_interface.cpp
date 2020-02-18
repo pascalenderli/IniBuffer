@@ -1,19 +1,19 @@
 /**
- * @file python_interface
+ * @file python_interface.cpp
  * @author Pascal Enderli
  * @date 2020.01.14
  * @brief Python binding for IniBuffer.
  */
 
 #include<pybind11/pybind11.h>
-#include"ini_buffer.h"
+#include"ini_buffer_py.h"
 
 namespace py = pybind11;
 
 PYBIND11_MODULE(IniBuffer, m)
 {
 //-----------------------------------------------------------------------------------------------------------------------------------------
-// Doctring
+// Module Docstring
 
     m.doc() = R"pbdoc(
         This module exposes an interface to work with an ini-configuration file.
@@ -110,9 +110,9 @@ PYBIND11_MODULE(IniBuffer, m)
         )
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
-// GetValue<float>
+// GetValue<double>
 
-        .def("GetValue_float", &IniBuffer::GetValue<float>,
+        .def("GetValue_float", &IniBuffer::GetValue<py::float_>,
         R"pbdoc(Receive a requested value from the buffer.
 
         Details:

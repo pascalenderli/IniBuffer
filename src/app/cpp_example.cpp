@@ -35,8 +35,10 @@ int main()
 
             int d1 = ini.GetValue<int>("04_integers", "key01");
             int d2 = ini.GetValue<int>("04_integers", "key11");
-            int d3 = ini.GetValue<int>("04_integers", "key26");
-            std::cout<<"04_integers\n"<<"key01: "<<d1<<"\n"<<"key11: "<<d2<<"\n"<<"key26: "<<d3<<"\n\n";
+            float d3 = ini.GetValue<float>("05_floats", "key02");
+            std::cout<<"04_integers\n"<<"key01: "<<d1<<"\n"<<"key11: "<<d2<<"\n";
+            std::cout<<"05_floats\n"<<"key02: "<<d3<<"\n\n";
+
         }
         catch(IniException& e)
         {

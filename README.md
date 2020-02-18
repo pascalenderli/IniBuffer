@@ -24,7 +24,7 @@ cmake --build .
 ```
 ### With Python Package
 If you like to build the python package, you need to set the cmake option (build_python_package) to ON.
-Before building the package, you have to install python3-dev and python3-distutils. Make sure you copy the python package binary to "/usr/lib/python3/dist-packages" after building.
+Before building the package, you have to install python3-dev and python3-distutils.
 ```shell
 # Install prerequisites
 sudo apt install python3-dev
@@ -35,9 +35,6 @@ mkdir src/build
 cd src/build
 cmake -Dbuild_python_package=ON ..
 cmake --build .
-
-# Copy the python binary to python dist-packages
-sudo cp python_interface/IniBuffer.*.so /usr/lib/python3/dist-packages
 ```
 
 ## Background
@@ -93,7 +90,6 @@ Comments start with a '#' or a ';'. Everything to the right of one of the two de
 ### Valid ini-file Example
 shapes.ini
 ```text
-# I an a dummy ini-file.
 # I am not pretty but you are still looking at me :-P
 ; A not so necessary comment line :-P
 
@@ -185,21 +181,27 @@ catch(IniException& e)
 ```
 
 ## Python Example
-After copying the python binary to "/usr/lib/python3/dist-packages" you can import and use it like shown below:
+After building the python module, it is located at the folder python_interface and you can import and use it like shown below or copy it wherever you like.
 ```python
-from IniBuffer import *
-ini = IniBuffer()
-ini.LoadFile("shapes.ini")
+name@<host> ~/IniBuffer/src/build
+$ pwd
+~/IniBuffer/src/build
+python3
+>>> from python_interface.IniBuffer import *
+>>> ini = IniBuffer()
+>>> ini.LoadFile("shapes.ini")
 
-section_name = "Circle"
-key_name = "Diameter"
+>>> section_name = "Circle"
+>>> key_name = "Diameter"
 
-value = ini.GetValue_int(section_name, key_name)
-print("section:"+section_name+"; key:"+key_name+"; value:"+str(value))
+>>> value = ini.GetValue_int(section_name, key_name)
+>>> print("Section:"+section_name+"; Key:"+key_name+"; Value:"+str(value))
+    Section:Circle; Key:Diameter; Value:700
 ```
 ## Open Tasks
 * Detailed catch2 tests for c++ code.
 * Python interface tests.
-* Python setup.py and developping a single GetValue function for all types.
+* Python setup.py (pipy.org)
+* Developping a single GetValue function for all types.
 * Generate recursive stackktrace for IniExceptions.
 * Generating MATLAB binding
